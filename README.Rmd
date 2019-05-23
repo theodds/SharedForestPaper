@@ -1,7 +1,7 @@
 ---
 title: "README"
 output:
-  html_document:
+  github_document:
     pandoc_args: --webtex
 header-includes:
    - \usepackage{amsmath, amssymb, amsthm}

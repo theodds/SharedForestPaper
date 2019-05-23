@@ -1,0 +1,3 @@
+useDynLib(GammaForest)
+importFrom(Rcpp, evalCpp)
+exportPattern("^[[:alpha:]]+")

@@ -6,6 +6,8 @@ README
 Install
 -------
 
+This repository is a companion to the paper by Linero, Sinha, and Lipsitz (2019+), which deals with sharing tree topologies in BART models.
+
 There are two packages included in this repository: `GammaForest` and `SharedForest`. After downloading this repository, the first step is to install both of these packages by running (say)
 
     R CMD INSTALL ./GammaForest/

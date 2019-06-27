@@ -411,9 +411,9 @@ arma::mat get_params(std::vector<Node*>& forest) {
   int num_leaves = mu.size();
   mat mu_tau_theta = zeros<mat>(num_leaves, 3);
   for(int i = 0; i < num_leaves; i++) {
-    mu_tau_theta(i,0) = mu[0];
-    mu_tau_theta(i,1) = tau[1];
-    mu_tau_theta(i,2) = tau[2];
+    mu_tau_theta(i,0) = mu[i];
+    mu_tau_theta(i,1) = tau[i];
+    mu_tau_theta(i,2) = theta[i];
   }
 
   return mu_tau_theta;

@@ -35,6 +35,22 @@ int sample_class(int n) {
   return n - 1;
 }
 
+int sample_class_col(const arma::sp_mat& probs, int col) {
+  double U = R::unif_rand();
+  double cumsum = 0.0;
+
+  arma::sp_mat::const_col_iterator it = probs.begin_col(col);
+  arma::sp_mat::const_col_iterator it_end = probs.end_col(col);
+  for(; it != it_end; ++it) {
+    cumsum += (*it);
+    if(U < cumsum) {
+      return it.row();
+    }
+  }
+  return it.row();
+
+}
+
 double logit(double x) {
   return log(x) - log(1.0-x);
 }

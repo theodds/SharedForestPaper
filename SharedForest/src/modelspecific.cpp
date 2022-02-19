@@ -160,31 +160,37 @@ void Refit(Node* tree, MyData& data) {
 }
 
 void Node::UpdateParams(MyData& data) {
-
+  
   UpdateSuffStat(data);
   std::vector<Node*> leafs = leaves(this);
   int num_leaves = leafs.size();
   double a = 1.0/pow(hypers->sigma_theta,2);
   for(int i = 0; i < num_leaves; i++) {
     Node* l      = leafs[i];
-    double w     = l->ss.sum_v;
-    double Y_bar = l->ss.sum_v_Y / l->ss.sum_v;
-    double SSE   = l->ss.sum_v_Y_sq - l->ss.sum_v * Y_bar * Y_bar;
-    double kappa = hypers->kappa;
-
-    double mu_up = l->ss.sum_v_Y / (w + kappa);
-    double kappa_up = kappa + w;
-    double a_up = hypers->a_tau + 0.5 * l->ss.n;
-    double b_up = hypers->b_tau + 0.5 * SSE
-      + 0.5 * kappa * w * Y_bar * Y_bar / (kappa + w);
-
-    l->tau = R::rgamma(a_up, 1.0 / b_up);
-    l->mu  = mu_up + norm_rand() / sqrt(l->tau * kappa_up);
-
+    if(l->ss.n > 0) {
+      double w     = l->ss.sum_v;
+      double Y_bar = l->ss.sum_v_Y / l->ss.sum_v;
+      double SSE   = l->ss.sum_v_Y_sq - l->ss.sum_v * Y_bar * Y_bar;
+      double kappa = hypers->kappa;
+      
+      double mu_up = l->ss.sum_v_Y / (w + kappa);
+      double kappa_up = kappa + w;
+      double a_up = hypers->a_tau + 0.5 * l->ss.n;
+      double b_up = hypers->b_tau + 0.5 * SSE
+        + 0.5 * kappa * w * Y_bar * Y_bar / (kappa + w);
+      
+      l->tau = R::rgamma(a_up, 1.0 / b_up);
+      l->mu  = mu_up + norm_rand() / sqrt(l->tau * kappa_up);
+    }
+    else {
+      l->tau = R::rgamma(hypers->a_tau, 1.0 / hypers->b_tau);
+      l->mu = norm_rand() / sqrt(l->tau * hypers->kappa);
+    }
+    
     double theta_hat = l->ss.sum_Z / (l->ss.n_Z + a);
     double sigma_theta = pow(l->ss.n_Z + a, -0.5);
     l->theta = theta_hat + norm_rand() * sigma_theta;
-
+    
   }
 }
 
